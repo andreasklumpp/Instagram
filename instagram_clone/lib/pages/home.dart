@@ -9,19 +9,59 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static int page = 1;
+  static Post the_post = post1;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        children: <Widget>[
-          Container(
-            height: 80,
-            child: getStories(),
-          ),
-          Column(
-            children: getPosts(),
+    Map<int, Widget> pageview = {
+      1: getMain(),
+      2: getLikes(the_post.likes),
+      //3 : getComments(the_post.comments)
+    };
+    return pageview[page];
+  }
+
+  Widget getMain() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Instagram",
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        actionsIconTheme: IconThemeData(
+          color: Colors.black,
+          opacity: 10,
+          size: 25,
+        ),
+        leading: IconButton(
+            icon: Icon(
+              Icons.camera_alt,
+              color: Colors.black,
+            ),
+            onPressed: null),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {},
+              child: Icon(Icons.send),
+            ),
           ),
         ],
+      ),
+      body: Container(
+        child: ListView(
+          children: <Widget>[
+            Container(
+              height: 80,
+              child: getStories(),
+            ),
+            Column(
+              children: getPosts(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -170,7 +210,13 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.start,
               style: textStyleBold,
             ),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                the_post = post;
+                page = 2;
+                build(context);
+              });
+            },
           ),
           Row(
             children: <Widget>[
@@ -193,6 +239,78 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {},
           ),
         ],
+      ),
+    );
+  }
+
+  Widget getLikes(List<User> likes) {
+    List<Widget> likers = [];
+    for (User liker in likes) {
+      likers.add(
+        Container(
+          height: 45,
+          padding: EdgeInsets.all(10),
+          child: FlatButton(
+            onPressed: null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(liker.username),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.grey),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: FlatButton(
+                    color: user.following.contains(liker)
+                        ? Colors.white
+                        : Colors.blue,
+                    onPressed: null,
+                    child: Text(
+                      user.following.contains(liker) ? "Entfolgen" : "Folgen",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: user.following.contains(liker)
+                              ? Colors.grey
+                              : Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          '"Gefällt mir"',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+          opacity: 10,
+          size: 25,
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            setState(() {
+              page = 1;
+              build(context);
+            });
+          },
+        ),
+      ),
+      body: Container(
+        child: ListView(
+          children: likers,
+        ),
       ),
     );
   }
