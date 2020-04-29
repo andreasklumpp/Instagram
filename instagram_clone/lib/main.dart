@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Instagram',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -40,7 +41,31 @@ class _MyHomePageState extends State<MyHomePage> {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Instagram"),
+          title: Text(
+            "Instagram",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          actionsIconTheme: IconThemeData(
+            color: Colors.black,
+            opacity: 10,
+            size: 25,
+          ),
+          leading: IconButton(
+              icon: Icon(
+                Icons.camera_alt,
+                color: Colors.black,
+              ),
+              onPressed: null),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(Icons.send),
+              ),
+            ),
+          ],
         ),
         body: TabBarView(children: pages),
         bottomNavigationBar: Container(
